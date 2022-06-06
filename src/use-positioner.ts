@@ -60,13 +60,14 @@ export function usePositioner(
   // Create a new positioner when the dependencies or sizes change
   // Thanks to https://github.com/khmm12 for pointing this out
   // https://github.com/jaredLunde/masonic/pull/41
-  if (optsChanged || !deps.every((item, i) => prevDeps.current[i] === item)) {
+  const depsChanged =  !deps.every((item, i) => prevDeps.current[i] === item)
+  if (optsChanged || depsChanged) {
     const prevPositioner = positionerRef.current;
     const positioner = initPositioner();
     prevDeps.current = deps;
     prevOpts.current = opts;
 
-    if (optsChanged) {
+    if (optsChanged && !depsChanged) {
       const cacheSize = prevPositioner.size();
       for (let index = 0; index < cacheSize; index++) {
         const pos = prevPositioner.get(index);
